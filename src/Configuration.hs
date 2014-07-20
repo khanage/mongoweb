@@ -1,6 +1,8 @@
 -- | Load application configuration
+
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
+
 module Configuration where
 
 import           Control.Monad           (liftM)
@@ -8,7 +10,7 @@ import           Data.Configurator       (Worth (..), lookupDefault, require)
 import           Data.Configurator.Types (Config)
 import qualified Data.Text               as T
 
-data MongoConf = MongoConf { mConnection :: T.Text
+data MongoConf = MongoConf { mConnection :: String
                            , mDatabase   :: T.Text
                            , mCollection :: T.Text }
 

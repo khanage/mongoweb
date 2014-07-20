@@ -61,12 +61,16 @@ executable mongoweb
                      , mtl >= 2.1.2
                      , transformers >= 0.3.0.0
                      , errors >= 1.4.7
+                     , bson >= 0.3 
+                     , unordered-containers >= 0.2.5.0
+                     , vector >= 0.9.1
+                     , scientific >= 0.3.3.0
+                     , configurator >= 0.3.0.0
+                     , aeson >= 0.7.0.4
                      , text >= 1.1.1.3
+                     , bytestring >= 0.10.0.0
                      , mongoDB >= 2.0
                      , scotty >= 0.8.1
-                     , aeson >= 0.7.0.4
-                     , bson >= 0.3
-                     , configurator >= 0.3.0.0
   
   -- Directories containing source files.
   hs-source-dirs:      ., src

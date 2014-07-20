@@ -1,24 +1,35 @@
 -- | Application entry point
+
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards   #-}
+
 module Main where
 
 import           Configuration
-import           Control.Monad.Error (runErrorT)
-import           Data.Configurator   (Worth (..), load)
+import           Data.Configurator (Worth (..), load)
+import           Data.Mongo
+import           Database.MongoDB
 
 main = do
   conf <- load [Required "app.config"]
-  scottyConf <- loadWebConf conf
-  mongoConf <- loadMongoConf conf
 
-  let webMsg = "Will run scotty on port " ++ show (wPort scottyConf)
-      mongoMsg =
-        "Will run mongo as:\n"
-        ++ "\tConnection: " ++ show (mConnection mongoConf) ++ "\n"
-        ++ "\tDatabase: "   ++ show (mDatabase mongoConf)   ++ "\n"
-        ++ "\tCollection: " ++ show (mCollection mongoConf) ++ "\n"
+  WebConf   {..} <- loadWebConf conf
+  MongoConf {..} <- loadMongoConf conf
+
+  let scottMsg = "Will run scotty on port: " ++ show wPort
+      mongoMsg = "Will run mongo as:\n"
+        ++ "\tConnection: " ++ mConnection      ++ "\n"
+        ++ "\tDatabase:   " ++ show mDatabase   ++ "\n"
+        ++ "\tCollection: " ++ show mCollection ++ "\n"
 
   putStrLn "Starting up\n"
-  putStrLn webMsg
+  putStrLn scottMsg
   putStrLn mongoMsg
+
+  mongoPipe <- connect $ host mConnection
+
+  let mongoRunner = createRunner mongoPipe master mDatabase
+      upserter = upsertItem mCollection mongoRunner
+      deleter  = deleteItem mCollection mongoRunner
 
   putStrLn "Done"
