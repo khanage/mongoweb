@@ -2,7 +2,7 @@
 
 {-# LANGUAGE OverloadedStrings #-}
 
-module Data.BsonAesonBridge (toDocument) where
+module Data.BsonAesonBridge where
 
 import           Control.Monad       (liftM)
 import qualified Data.Aeson          as A
@@ -21,7 +21,7 @@ addToDoc :: T.Text -> A.Value -> Maybe B.Document -> Maybe B.Document
 addToDoc _ _ Nothing    = Nothing
 addToDoc k v (Just doc) =
   case mapValue v of
-    Just mapped -> Just $ B.merge doc [k =: mapped]
+    Just mapped -> Just $ B.merge [k =: mapped] doc
     Nothing -> Nothing
 
 mapValue :: A.Value -> Maybe B.Value
@@ -30,7 +30,7 @@ mapValue av = case av of
   A.Bool b   -> Just $ B.Bool b
   A.String s -> Just $ B.String s
   A.Number n -> convertScientific n
-  A.Object o -> B.Doc `liftM` toDocument av
+  A.Object _ -> B.Doc `liftM` toDocument av
   A.Array as -> B.Array `liftM` convertArray as
 
 convertArray :: V.Vector A.Value -> Maybe [B.Value]
