@@ -16,11 +16,11 @@ RUN mkdir /app
 RUN git clone https://github.com/khanage/mongoweb /app/mongoweb
 WORKDIR /app/mongoweb
 
-RUN cabal install --dependencies-only
+RUN cabal install --dependencies-only --constraint="contravariant == 0.6"
 RUN cabal build
 
 COPY app.config /app/mongoweb/app.config
 
 ENTRYPOINT ./dist/build/mongoweb/mongoweb
 
-EXPOSE 22 80
+EXPOSE 8080
